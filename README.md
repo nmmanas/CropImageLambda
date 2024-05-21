@@ -12,3 +12,8 @@ Lambda can be deployed via github action. Currently its set to manual deployment
 Make sure to configure `TARGET_BUCKET_NAME` as environment variable on the lambda configuration
 ### Secrets
 Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in github repository secrets to be used when pushing the lambda code to aws
+
+## TODO
+- [ ] Change cropping to scale down the image to either the preferred height or width first depends on what is shorter
+- [ ] Scale up the image first if the image height or width is lower than the preferred height/width
+- [ ] Parameterize the target image size
