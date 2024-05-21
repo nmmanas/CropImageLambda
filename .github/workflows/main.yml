@@ -13,24 +13,18 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-      - name: Install dependencies within a virtualenv
+      - name: Install dependencies within package directory
         run: |
-          python -m venv venv
-          source venv/bin/activate
+          mkdir package
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt --target ./package
       - name: Zip the source code
         run: |
-          source venv/bin/activate
-          zip -r lambda_handler.zip .
-      
-      # - name: Install AWS CLI
-      #   run: |
-      #     sudo apt-get install -y unzip
-      #     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      #     unzip awscliv2.zip
-      #     sudo ./aws/install
-        
+          cd package
+          zip -r ../lambda_handler.zip .
+          cd ..
+          zip lambda_handler.zip lambda_function.py
+
       - name: Deploy to Lambda
         run: |
           aws lambda update-function-code --function-name crop-social-images --zip-file fileb://lambda_handler.zip --region us-west-2
