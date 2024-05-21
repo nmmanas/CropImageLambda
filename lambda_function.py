@@ -32,17 +32,25 @@ def lambda_handler(event, context):
             crop_box = (0, 0, 1080, 1080)
             cropped_img = img.crop(crop_box)
 
+            logger.info(
+                f"Successfully cropped the image"
+            )
+
             # Save the cropped image to a bytes buffer
             buffer = io.BytesIO()
-            cropped_img.save(buffer, format="JPEG")
+            cropped_img.save(buffer, format="PNG")
             buffer.seek(0)
+
+            logger.info(
+                f"Successfully saved the cropped image to bytes buffer"
+            )
 
             # Upload the cropped image back to S3
             cropped_object_key = f"cropped-{object_key}"
             s3_client.put_object(Bucket=target_bucket,
                                  Key=cropped_object_key,
                                  Body=buffer,
-                                 ContentType='image/jpeg')
+                                 ContentType='image/png')
             logger.info(
                 f"Successfully cropped and uploaded {cropped_object_key} to {target_bucket}"
             )
