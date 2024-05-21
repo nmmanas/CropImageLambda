@@ -13,17 +13,21 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-      - name: Install dependencies
+      - name: Install dependencies within a virtualenv
         run: |
+          python -m venv venv
+          source venv/bin/activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Zip the source code
-        run: zip -r lambda_handler.zip .
+        run: |
+          source venv/bin/activate
+          zip -r lambda_handler.zip .
       - name: Deploy to Lambda
         uses: appleboy/lambda-action@master
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: eu-west-1
+          aws_region: eu-west-2
           function_name: crop-social-images
           zip_file: lambda_handler.zip
